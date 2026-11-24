@@ -17,7 +17,7 @@ L'état est lu directement dans le jeu : roulettes faites, allocations, livre d'
 ## Installation
 
 1. Dans le jeu, ouvrez les **paramètres d'Umbra → Plugins**.
-2. Ajoutez le dépôt GitHub de ce projet, ou un fichier local pointant vers `Umbra.DailyChecklist.dll`.
+2. Ajoutez un dépôt GitHub : propriétaire `Soratix`, dépôt `UmbraDailyChecklist`.
 3. Passez la barre d'outils en mode édition et ajoutez le widget **« Quotidien & hebdo »**. Dans la recherche, vous pouvez aussi taper `daily`, `roulette` ou `reset`.
 4. Choisissez les roulettes à suivre dans l'onglet **« Roulettes »** des réglages du widget.
 
