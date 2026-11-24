@@ -1,11 +1,18 @@
 namespace Umbra.DailyChecklist;
 
-[ToolbarWidget(
+/// <summary>
+/// Le nom et la description d'un [ToolbarWidget] sont des constantes. Umbra lit l'attribut
+/// avec GetCustomAttribute au démarrage de son framework, ce qui accepte une sous-classe :
+/// celle-ci choisit le nom et la description dans la langue du jeu à ce moment-là.
+/// </summary>
+internal sealed class LocalizedToolbarWidgetAttribute() : ToolbarWidgetAttribute(
     "DailyChecklist",
-    "Quotidien & hebdo / Daily & Weekly",
-    "Resets et tâches restantes : roulettes, tribus alliées, livre d'Idylle, livraisons spéciales. / Reset timers and what's left to do: roulettes, allied societies, Wondrous Tails, custom deliveries.",
+    Strings.T("WidgetName"),
+    Strings.T("WidgetDesc"),
     ["daily", "weekly", "reset", "roulette", "checklist", "quotidien", "hebdo", "tribu", "idylle", "wondrous", "tails", "allied", "society", "delivery"]
-)]
+);
+
+[LocalizedToolbarWidget]
 public sealed class DailyChecklistWidget(
     WidgetInfo                  info,
     string?                     guid         = null,

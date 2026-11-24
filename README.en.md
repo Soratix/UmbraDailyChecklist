@@ -16,13 +16,13 @@ A toolbar widget for [Umbra](https://github.com/una-xiv/umbra) (FINAL FANTASY XI
 
 Everything is read directly from the game: completed roulettes, allowances, Wondrous Tails. Nothing needs to be entered by hand.
 
-The widget's interface is in English, or in French when Umbra (or, failing that, the game client) is set to French. Roulette names follow your client's language.
+The widget's interface, name included, is in English, or in French when the game client is in French. Roulette names follow your client's language.
 
 ## Installation
 
 1. In game, open **Umbra settings → Plugins**.
 2. Add a GitHub repository: owner `Soratix`, repository `UmbraDailyChecklist`.
-3. Switch the toolbar to edit mode and add the **Daily & Weekly** widget (listed as « Quotidien & hebdo / Daily & Weekly » in the widget list). You can also search for `daily`, `roulette` or `reset`.
+3. Switch the toolbar to edit mode and add the **Daily & Weekly** widget (« Quotidien & hebdo » on a French client). You can also search for `daily`, `roulette` or `reset`.
 4. Pick the roulettes to track in the **Roulettes** tab of the widget settings.
 
 ## Building it yourself
