@@ -16,13 +16,13 @@ Plugin pour [Umbra](https://github.com/una-xiv/umbra) (FINAL FANTASY XIV, via Da
 
 L'état est lu directement dans le jeu : roulettes faites, allocations, livre d'Idylle. Rien n'est saisi à la main.
 
-L'interface du widget, nom compris, est en français si le jeu est en français, et en anglais sinon. Les noms des roulettes suivent la langue du client.
+L'interface du widget, nom compris, suit la langue d'Umbra : en français si Umbra est en français, en anglais sinon. Les noms des roulettes suivent la langue du client.
 
 ## Installation
 
 1. Dans le jeu, ouvrez les **paramètres d'Umbra → Plugins**.
 2. Ajoutez un dépôt GitHub : propriétaire `Soratix`, dépôt `UmbraDailyChecklist`.
-3. Passez la barre d'outils en mode édition et ajoutez le widget **« Quotidien & hebdo »** (« Daily & Weekly » sur un client non français). Dans la recherche, vous pouvez aussi taper `daily`, `roulette` ou `reset`.
+3. Passez la barre d'outils en mode édition et ajoutez le widget **« Quotidien & hebdo »** (« Daily & Weekly » si Umbra n'est pas en français). Dans la recherche, vous pouvez aussi taper `daily`, `roulette` ou `reset`.
 4. Choisissez les roulettes à suivre dans l'onglet **« Roulettes »** des réglages du widget.
 
 ## Compiler soi-même
