@@ -37,7 +37,7 @@ public static class Resets
         if (span < TimeSpan.Zero) span = TimeSpan.Zero;
 
         return span.TotalDays >= 1
-            ? $"{(int)span.TotalDays} j {span.Hours} h"
+            ? Strings.T("DaysHours", (int)span.TotalDays, span.Hours)
             : $"{(int)span.TotalHours}:{span.Minutes:00}:{span.Seconds:00}";
     }
 }

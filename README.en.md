@@ -4,8 +4,6 @@
 
 A toolbar widget for [Umbra](https://github.com/una-xiv/umbra) (FINAL FANTASY XIV, via Dalamud) that tracks what is left to do before the daily and weekly resets.
 
-> The widget's in-game interface is currently in French only.
-
 ## Features
 
 - **In the toolbar:** the number of tasks left and a countdown to the daily reset.
@@ -18,12 +16,14 @@ A toolbar widget for [Umbra](https://github.com/una-xiv/umbra) (FINAL FANTASY XI
 
 Everything is read directly from the game: completed roulettes, allowances, Wondrous Tails. Nothing needs to be entered by hand.
 
+The widget's interface is in English, or in French when Umbra (or, failing that, the game client) is set to French. Roulette names follow your client's language.
+
 ## Installation
 
 1. In game, open **Umbra settings → Plugins**.
 2. Add a GitHub repository: owner `Soratix`, repository `UmbraDailyChecklist`.
-3. Switch the toolbar to edit mode and add the **« Quotidien & hebdo »** widget (Daily & weekly). You can also search for `daily`, `roulette` or `reset`.
-4. Pick the roulettes to track in the **« Roulettes »** tab of the widget settings.
+3. Switch the toolbar to edit mode and add the **Daily & Weekly** widget (listed as « Quotidien & hebdo / Daily & Weekly » in the widget list). You can also search for `daily`, `roulette` or `reset`.
+4. Pick the roulettes to track in the **Roulettes** tab of the widget settings.
 
 ## Building it yourself
 
@@ -35,7 +35,7 @@ dotnet build -c Release DailyChecklist\DailyChecklist.csproj
 
 ## Known limitation
 
-The game does not tell apart a Wondrous Tails journal that has **not been picked up yet** from one **already turned in** this week. In both cases the widget shows « À récupérer » (to pick up).
+The game does not tell apart a Wondrous Tails journal that has **not been picked up yet** from one **already turned in** this week. In both cases the widget shows "To pick up".
 
 ## License
 

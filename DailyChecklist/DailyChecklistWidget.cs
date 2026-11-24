@@ -2,9 +2,9 @@ namespace Umbra.DailyChecklist;
 
 [ToolbarWidget(
     "DailyChecklist",
-    "Quotidien & hebdo",
-    "Compte à rebours des resets et liste de ce qu'il reste à faire : roulettes, tribus alliées, livre d'Idylle, livraisons spéciales.",
-    ["daily", "weekly", "reset", "roulette", "checklist", "quotidien", "hebdo", "tribu", "idylle", "wondrous"]
+    "Quotidien & hebdo / Daily & Weekly",
+    "Resets et tâches restantes : roulettes, tribus alliées, livre d'Idylle, livraisons spéciales. / Reset timers and what's left to do: roulettes, allied societies, Wondrous Tails, custom deliveries.",
+    ["daily", "weekly", "reset", "roulette", "checklist", "quotidien", "hebdo", "tribu", "idylle", "wondrous", "tails", "allied", "society", "delivery"]
 )]
 public sealed class DailyChecklistWidget(
     WidgetInfo                  info,
@@ -41,16 +41,16 @@ public sealed class DailyChecklistWidget(
 
     protected override IEnumerable<IWidgetConfigVariable> GetConfigVariables()
     {
-        const string cat = "Quotidien & hebdo";
+        string cat = Strings.T("WidgetName");
 
         return [
             ..base.GetConfigVariables(),
-            new BooleanWidgetConfigVariable("TrackTribes", "Allocations de tribus alliées", "Quotidien : allocations de quêtes de tribus restantes.", true) { Category = cat },
-            new BooleanWidgetConfigVariable("TrackWondrousTails", "Livre d'Idylle", "Hebdomadaire : livre d'Idylle (Wondrous Tails) à récupérer, à compléter ou à rendre.", true) { Category = cat },
-            new BooleanWidgetConfigVariable("TrackDeliveries", "Livraisons spéciales", "Hebdomadaire : allocations de livraisons spéciales restantes.", true) { Category = cat },
-            new BooleanWidgetConfigVariable("CountWeekly", "Compter l'hebdo dans le total", "Le nombre affiché dans la barre inclut aussi les tâches hebdomadaires.", true) { Category = cat },
-            new BooleanWidgetConfigVariable("ShowGcReset", "Afficher le reset de Grande Compagnie", "Ajoute le compte à rebours du reset des livraisons de Grande Compagnie (20:00 UTC) dans l'infobulle.", true) { Category = cat },
-            new BooleanWidgetConfigVariable("HideDone", "Masquer les tâches faites", "N'affiche dans la liste que ce qu'il reste à faire.", false) { Category = cat },
+            new BooleanWidgetConfigVariable("TrackTribes", Strings.T("Cfg.Tribes"), Strings.T("Cfg.Tribes.Desc"), true) { Category = cat },
+            new BooleanWidgetConfigVariable("TrackWondrousTails", Strings.T("Cfg.WT"), Strings.T("Cfg.WT.Desc"), true) { Category = cat },
+            new BooleanWidgetConfigVariable("TrackDeliveries", Strings.T("Cfg.Deliveries"), Strings.T("Cfg.Deliveries.Desc"), true) { Category = cat },
+            new BooleanWidgetConfigVariable("CountWeekly", Strings.T("Cfg.CountWeekly"), Strings.T("Cfg.CountWeekly.Desc"), true) { Category = cat },
+            new BooleanWidgetConfigVariable("ShowGcReset", Strings.T("Cfg.ShowGcReset"), Strings.T("Cfg.ShowGcReset.Desc"), true) { Category = cat },
+            new BooleanWidgetConfigVariable("HideDone", Strings.T("Cfg.HideDone"), Strings.T("Cfg.HideDone.Desc"), false) { Category = cat },
             ..GetRouletteVariables(),
         ];
     }
@@ -66,8 +66,8 @@ public sealed class DailyChecklistWidget(
         }
 
         foreach (var r in roulettes) {
-            yield return new BooleanWidgetConfigVariable(RouletteVar(r), r.Name, "Suivre cette roulette quotidienne.", r.DefaultTracked) {
-                Category = "Roulettes",
+            yield return new BooleanWidgetConfigVariable(RouletteVar(r), r.Name, Strings.T("Cfg.Roulette.Desc"), r.DefaultTracked) {
+                Category = Strings.T("Cfg.Roulettes"),
             };
         }
     }
@@ -81,8 +81,8 @@ public sealed class DailyChecklistWidget(
         Popup.OnPopupOpen += OnPopupOpened;
         Node.OnRightClick += _ => Framework.Service<IChatSender>().Send("/dutyfinder");
 
-        SetText("Quotidien & hebdo");
-        SetSubText("Chargement…");
+        SetText(Strings.T("WidgetName"));
+        SetSubText(Strings.T("Loading"));
     }
 
     protected override void OnUnload()
@@ -99,8 +99,8 @@ public sealed class DailyChecklistWidget(
         var now = DateTime.UtcNow;
 
         if (!GameState.IsAvailable) {
-            SetText("Quotidien & hebdo");
-            SetSubText($"Reset dans {Resets.Format(Resets.NextDaily(now) - now)}");
+            SetText(Strings.T("WidgetName"));
+            SetSubText(Strings.T("ResetIn", Resets.Format(Resets.NextDaily(now) - now)));
             return;
         }
 
@@ -108,7 +108,7 @@ public sealed class DailyChecklistWidget(
             _items = CollectItems();
         } catch (Exception e) {
             Logger.Error($"[DailyChecklist] Erreur de lecture de l'état du jeu : {e}");
-            SetSubText("Erreur de lecture");
+            SetSubText(Strings.T("ReadError"));
             return;
         }
 
@@ -126,31 +126,31 @@ public sealed class DailyChecklistWidget(
             if (!GetConfigValue<bool>(RouletteVar(r))) continue;
 
             bool done = GameState.IsRouletteComplete(r.Id);
-            items.Add(new($"R{r.Id}", Section.Daily, r.Name, done ? "Fait" : "À faire", done,
+            items.Add(new($"R{r.Id}", Section.Daily, r.Name, done ? Strings.T("Done") : Strings.T("Todo"), done,
                 () => Framework.Service<IChatSender>().Send("/dutyfinder")));
         }
 
         if (GetConfigValue<bool>("TrackTribes")) {
             int left = GameState.BeastTribeAllowances;
-            items.Add(new("Tribes", Section.Daily, "Tribus alliées", left == 0 ? "Fait" : $"{left} allocation{(left > 1 ? "s" : "")}", left == 0, null));
+            items.Add(new("Tribes", Section.Daily, Strings.T("Tribes"), left == 0 ? Strings.T("Done") : Strings.Plural("Allowance", left), left == 0, null));
         }
 
         if (GetConfigValue<bool>("TrackWondrousTails")) {
             var (has, expired, stickers) = GameState.WondrousTails;
 
             var (status, done) = (has && !expired) switch {
-                false              => ("À récupérer", false),
-                true when stickers >= 9 => ("Complet, à rendre", false),
-                _                  => ($"{stickers}/9 vignettes", false),
+                false                   => (Strings.T("WT.PickUp"), false),
+                true when stickers >= 9 => (Strings.T("WT.TurnIn"), false),
+                _                       => (Strings.T("WT.Stickers", stickers), false),
             };
 
-            items.Add(new("WT", Section.Weekly, "Livre d'Idylle", status, done, null));
+            items.Add(new("WT", Section.Weekly, Strings.T("WT"), status, done, null));
         }
 
         if (GetConfigValue<bool>("TrackDeliveries")) {
             int left = GameState.CustomDeliveryAllowances;
             if (left >= 0) {
-                items.Add(new("CD", Section.Weekly, "Livraisons spéciales", left == 0 ? "Fait" : $"{left} restante{(left > 1 ? "s" : "")}", left == 0, null));
+                items.Add(new("CD", Section.Weekly, Strings.T("Deliveries"), left == 0 ? Strings.T("Done") : Strings.Plural("Remaining", left), left == 0, null));
             }
         }
 
@@ -164,20 +164,20 @@ public sealed class DailyChecklistWidget(
         bool countWeekly = GetConfigValue<bool>("CountWeekly");
         int  remaining   = _items.Count(i => !i.Done && (countWeekly || i.Section == Section.Daily));
 
-        SetText(remaining == 0 ? "Tout est fait" : $"{remaining} tâche{(remaining > 1 ? "s" : "")} restante{(remaining > 1 ? "s" : "")}");
-        SetSubText($"Reset dans {Resets.Format(Resets.NextDaily(now) - now)}");
+        SetText(remaining == 0 ? Strings.T("AllDone") : Strings.Plural("TasksLeft", remaining));
+        SetSubText(Strings.T("ResetIn", Resets.Format(Resets.NextDaily(now) - now)));
 
         List<string> lines = [
-            $"Reset quotidien : {Resets.Format(Resets.NextDaily(now) - now)}",
-            $"Reset hebdomadaire : {Resets.Format(Resets.NextWeekly(now) - now)}",
+            Strings.T("DailyReset", Resets.Format(Resets.NextDaily(now) - now)),
+            Strings.T("WeeklyReset", Resets.Format(Resets.NextWeekly(now) - now)),
         ];
 
         if (GetConfigValue<bool>("ShowGcReset")) {
-            lines.Add($"Reset Grande Compagnie : {Resets.Format(Resets.NextGrandCompany(now) - now)}");
+            lines.Add(Strings.T("GcReset", Resets.Format(Resets.NextGrandCompany(now) - now)));
         }
 
         lines.Add("");
-        lines.Add("Clic : liste · Clic droit : outil de mission");
+        lines.Add(Strings.T("TooltipHint"));
 
         SetTooltip(string.Join("\n", lines));
     }
@@ -222,16 +222,16 @@ public sealed class DailyChecklistWidget(
             }
 
             if (visible.Count == 0) {
-                Popup.Add(new MenuPopup.Header("Tout est fait, bravo !"));
+                Popup.Add(new MenuPopup.Header(Strings.T("AllDoneBravo")));
             }
         }
 
         // Mise à jour des textes sans reconstruire le menu.
         if (_groups.TryGetValue(Section.Daily, out var daily)) {
-            daily.Label = $"Quotidien · reset dans {Resets.Format(Resets.NextDaily(now) - now)}";
+            daily.Label = Strings.T("DailyHeader", Resets.Format(Resets.NextDaily(now) - now));
         }
         if (_groups.TryGetValue(Section.Weekly, out var weekly)) {
-            weekly.Label = $"Hebdomadaire · reset dans {Resets.Format(Resets.NextWeekly(now) - now)}";
+            weekly.Label = Strings.T("WeeklyHeader", Resets.Format(Resets.NextWeekly(now) - now));
         }
 
         foreach (var item in visible) {
