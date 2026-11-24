@@ -1,5 +1,7 @@
 # Umbra – Quotidien & hebdo
 
+**Français** · [English](README.en.md)
+
 Plugin pour [Umbra](https://github.com/una-xiv/umbra) (FINAL FANTASY XIV, via Dalamud) qui ajoute un widget de barre d'outils pour suivre ce qu'il reste à faire avant les resets.
 
 ## Fonctionnalités
